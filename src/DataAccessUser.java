@@ -1,44 +1,50 @@
 public class DataAccessUser {
-    private String login;
-    private String password;
-    private String confirmPassword;
 
-
-    public String getLogin() {
-        return login;
+    private DataAccessUser() {
     }
 
-    public String getPassword() {
-        return password;
-    }
+    public static boolean VerificationDataUser(String login, String password, String confirmPassword) throws WrongLoginException, WrongPasswordException {
+        try {
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+            if (login.length() > 20) { // проверка логина на соответствие длины и символам
+                throw new WrongLoginException("Логин слишком длинный");
 
-    public static void VerificationDataUser(String login, String password, String confirmPassword) {
+            } else if (!login.matches("[a-zA-Z_0-9]+")) {
 
-        if (login.length() > 20) {
-            System.out.println("логин слишком длинный");
-        } else {
-            System.out.println("логин правильный");
-        }
+                System.out.println("логин не правильный");
+            } else {
+                System.out.println("логин правильный");
+            }
 
-        if (password.length() >= 20) {
-            System.out.println("пароль слишком длинный");
+            if (password.length() >= 20) {      // проверка пароля на соответствие длины и символам
+                throw new WrongPasswordException("Пароль слишком длинный");
+            } else if (!password.matches("[a-zA-Z_0-9]+")) {
+                System.out.println("пароль не правильный");
+            } else {
+                System.out.println("пароль правильный");
+            }
 
-        } else if (password.matches("[a-zA-Z_0-9]+")) {
-            System.out.println("пароль правильный");
-        } else {
-            System.out.println("пароль не правильный");
-        }
-        if (confirmPassword.equals(password)) {
-            System.out.println("Повторный ввод вверный");
-        } else {
-            System.out.println("Повторный ввод пароля не верный");
+            if (!confirmPassword.equals(password)) {    // проверка повторного введения пароля заданному
+                throw new WrongPasswordException("Пароли не совпадают");
+            } else {
+                System.out.println("Повторный ввод пароля верный");
+                return true;
+            }
+        } catch (WrongLoginException e) {
+            throw new RuntimeException(e);
+        } catch (WrongPasswordException e) {
+            throw new RuntimeException(e);
         }
     }
+
 }
+
+
+
+
+
+
+
 
 
 
